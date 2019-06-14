@@ -63,6 +63,8 @@ def format_string(s):
     # Create list to hold items
     vehicles = []
     # Creating an Object of the Class Vehicle per vehicle.
+    # Note, the ego-vehicle is always the first on the list, accessible as
+    # vehicles[0]
     for i in range(5):
         vehicles.append(Vehicle(
             float(l[1 + 8*i]),
@@ -72,7 +74,17 @@ def format_string(s):
         ))
     return(vehicles)
 
-# Transposing the vehicles in relation to ego-vehicle
+"""
+Transposing the vehicles in relation to ego-vehicle
+First, the origin of the matrix is set to the location of the ego-vehicle,
+so the ego-vehicle has the coordinates 0,0 and all other vehicles are set
+respectively.
+Then, the matrix is rotated in such a way, that the ego-vehicle going straight
+equals 0°, a car exactly on the left would be at 270° and a car exactly on the
+right 90°. This makes further computations with differing angles being covered
+by the LED strip or other devices easier.
+Input and Output of function a list containing members of Vehicle-class.
+"""
 def transposing_vehicles(vehicles):
     
     # Transposing origin to ego vehicle
@@ -84,7 +96,7 @@ def transposing_vehicles(vehicles):
     
     # Rotate matrix, so that ego vehicle's direction is 0
     rot = -(vehicles[0].h) - 90
-    # 
+    # math-library works with radians, therefore convert to radians
     rot_rad = math.radians(rot)
     for i in range(1,5):
         x = vehicles[i].x
@@ -102,24 +114,52 @@ def dist_to_ego(vehicles):
         vehicles[i].e_d = math.sqrt(vehicles[i].x**2 + vehicles[i].y**2)
     return vehicles
 
+# Computing the relative angle to the ego car
 def angle_to_ego(vehicles):
     for i in range(1,5):
         vehicles[i].e_a = math.degrees(math.atan2(math.radians(vehicles[i].x), math.radians(vehicles[i].y)))
+        # Convert negative values back tp positive ones
         if vehicles[i].e_a < 0:
             vehicles[i].e_a = 360 + vehicles[i].e_a
     return vehicles
 
+"""
+Computing the central LED that has to light up representing the respective car.
+veh = Vehicle from the Vehicle-class
+step = the angle-"distances" between each pixel
+f_pixels = Why is that in there? :D
+returns the central pixel as int
+"""
 def led_position(veh, step, f_pixels):
+    # Position if car on the right side
     if veh.e_a <= LED_DEGREES/2:
         return round((LED_DEGREES/2 - veh.e_a) / step)
+    # Position if car on left side
     elif veh.e_a >= 360 - LED_DEGREES/2:
         return round((-(veh.e_a - 360) + LED_DEGREES/2) / step)
         #return round((veh.e_a - LED_DEGREES)/ step)
-        return round(((360 - veh.e_a) + LED_DEGREES/2) / step)
+        #return round(((360 - veh.e_a) + LED_DEGREES/2) / step)
     else:
         return None
 
+"""
+Annoyingly written function for a simple LED pattern which is shown for the
+front of the LEDs, meaning where the location of the pixel is supposed to 
+accurately represent the one of the car.
+Two aspects are regarded in this pattern: The angle, represented by the
+location of the pixel(s) lighting up, as well as the distance to the ego car.
+THe latter one is represented by the number of pixels lighting up as well as
+how strongly they are lighting up.
+"""
 def simple_led_pattern(vehicles):
+    """
+    Change Light unsurprisingly changes a light, well, a pixel.
+    add_val: value to be added to pixel
+    f_pixels: the array of front pixels, to be changed
+    led_pos: The CENTRAL pixel of the car-representation
+    led_ord: The order of the value, so +- around the central pixel.
+    Returns the changed front pixel array
+    """
     def change_light(add_val, f_pixels, led_pos, led_ord):
         if add_val <= 0:
             return f_pixels
@@ -154,9 +194,13 @@ def simple_led_pattern(vehicles):
     
     # Noof pixels representing back of car on every side
     b_pixels = 10
+    # Noof front pixels can be calculated from all of the parameters
     f_pixels = PIXEL_COUNT - b_pixels * 2
+    # Pixel vector for the front pixels
     pix_vec = [0] * f_pixels
+    # The distance, from which on a car is represented on the screen
     threshold = 200
+    # 
     step = LED_DEGREES / f_pixels
     led_pref = [
                 [200, 60],

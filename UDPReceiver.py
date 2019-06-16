@@ -130,7 +130,7 @@ step = the angle-"distances" between each pixel
 f_pixels = Why is that in there? :D
 returns the central pixel as int
 """
-def led_position(veh, step, f_pixels):
+def led_position_front(veh, step, f_pixels):
     # Position if car on the right side
     if veh.e_a <= LED_DEGREES/2:
         return round((LED_DEGREES/2 - veh.e_a) / step)
@@ -141,6 +141,9 @@ def led_position(veh, step, f_pixels):
         #return round(((360 - veh.e_a) + LED_DEGREES/2) / step)
     else:
         return None
+    
+def led_position_back(veh, step_back, b_pixels):
+    return round((veh.e_a - LED_DEGREES/2) / step_back)
 
 """
 Annoyingly written function for a simple LED pattern which is shown for the
@@ -198,10 +201,12 @@ def simple_led_pattern(vehicles):
     f_pixels = PIXEL_COUNT - b_pixels * 2
     # Pixel vector for the front pixels
     pix_vec = [0] * f_pixels
+    pix_vec_back = [0] * (2 * b_pixels)
     # The distance, from which on a car is represented on the screen
     threshold = 200
     # 
     step = LED_DEGREES / f_pixels
+    step_back = (360 - LED_DEGREES) / (2 * b_pixels)
     led_pref = [
                 [200, 60],
                 [150, 45],
@@ -211,10 +216,11 @@ def simple_led_pattern(vehicles):
                 [18, 0]
                 ]
     
+    
     vehicles.pop(0)
     for i in vehicles:
         if i.e_d <= threshold:
-            led_c = led_position(i, step, f_pixels)
+            led_c = led_position_front(i, step, f_pixels)
             if led_c != None:
                 bright_list = []
                 for j in led_pref:
@@ -228,18 +234,27 @@ def simple_led_pattern(vehicles):
                     j = diversion from ledc
                     """
                     pix_vec = change_light(bright_list[j], pix_vec, led_c, j)
-                    
-    
-    back_vec = [0] * b_pixels
-    pix_vec.extend(back_vec)
-    tot_vec = [0] * b_pixels
-    tot_vec.extend(pix_vec)
-    return tot_vec
+            else:
+                led_c = led_position_back(i, step_back, b_pixels)
+                bright_list = []
+                for j in led_pref:
+                    bright_list.append((j[0] - i.e_d) / (j[0] - j[1]))
+                for j in range(len(bright_list)):
+                    pix_vec_back = change_light(bright_list[j], pix_vec_back, led_c, j)
                 
+                
+    
+    vec_vec = [pix_vec_back[:b_pixels], pix_vec, pix_vec_back[b_pixels:].reverse()]
+    return vec_vec
+                    
 
 def show_LEDs(pixels, led_vector):
-    for i in range(len(led_vector)):
+    for i in range(len(led_vector[0])):
+        pixels.set_pixel_rgb(i, int(led_vector[i] * 255), int(led_vector[i] * 255), 0)
+    for i in range(len(led_vector[1])):
         pixels.set_pixel_rgb(i, int(led_vector[i] * 255), 0, 0)
+    for i in range(len(led_vector[2])):
+        pixels.set_pixel_rgb(i, int(led_vector[i] * 255), int(led_vector[i] * 255), 0)
     # pixels.clear()
     pixels.show()
 

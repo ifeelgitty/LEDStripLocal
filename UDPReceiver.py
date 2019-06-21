@@ -1,7 +1,7 @@
 # Stuff relating UDP connection
 import socket
 # Set IP of the Raspberry Pi
-UDP_IP = "145.90.176.56"
+UDP_IP = "145.90.179.96"
 # Set Port used bz Simulator to send data
 UDP_PORT = 30002
 sock = socket.socket(socket.AF_INET, # Internet
@@ -133,17 +133,17 @@ returns the central pixel as int
 def led_position_front(veh, step, f_pixels):
     # Position if car on the right side
     if veh.e_a <= LED_DEGREES/2:
-        return round((LED_DEGREES/2 - veh.e_a) / step)
+        return int((LED_DEGREES/2 - veh.e_a) / step)
     # Position if car on left side
     elif veh.e_a >= 360 - LED_DEGREES/2:
-        return round((-(veh.e_a - 360) + LED_DEGREES/2) / step)
+        return int((-(veh.e_a - 360) + LED_DEGREES/2) / step)
         #return round((veh.e_a - LED_DEGREES)/ step)
         #return round(((360 - veh.e_a) + LED_DEGREES/2) / step)
     else:
         return None
     
 def led_position_back(veh, step_back, b_pixels):
-    return round((veh.e_a - LED_DEGREES/2) / step_back)
+    return int((veh.e_a - LED_DEGREES/2) / step_back)
 
 """
 Annoyingly written function for a simple LED pattern which is shown for the
@@ -241,23 +241,28 @@ def simple_led_pattern(vehicles):
                     bright_list.append((j[0] - i.e_d) / (j[0] - j[1]))
                 for j in range(len(bright_list)):
                     pix_vec_back = change_light(bright_list[j], pix_vec_back, led_c, j)
-                
-                
     
-    vec_vec = [pix_vec_back[:b_pixels], pix_vec, pix_vec_back[b_pixels:].reverse()]
+    print(pix_vec_back)
+    pix_vec_b_r = pix_vec_back[:b_pixels]
+    pix_vec_b_r.reverse()
+    pix_vec_b_l = pix_vec_back[b_pixels:]
+    pix_vec_b_l.reverse()
+    
+    vec_vec = [pix_vec_b_r, pix_vec, pix_vec_b_l]
+    print(vec_vec)
     return vec_vec
                     
 
 def show_LEDs(pixels, led_vector):
     pix = 0
     for i in range(len(led_vector[0])):
-        pixels.set_pixel_rgb(pix, int(led_vector[i] * 255), int(led_vector[i] * 255), 0)
+        pixels.set_pixel_rgb(pix, int(led_vector[0][i] * 255), 0, int(led_vector[0][i] * 255))
         pix += 1
     for i in range(len(led_vector[1])):
-        pixels.set_pixel_rgb(i, int(led_vector[i] * 255), 0, 0)
+        pixels.set_pixel_rgb(pix, int(led_vector[1][i] * 255), 0, 0)
         pix += 1
     for i in range(len(led_vector[2])):
-        pixels.set_pixel_rgb(i, int(led_vector[i] * 255), int(led_vector[i] * 255), 0)
+        pixels.set_pixel_rgb(pix, int(led_vector[2][i] * 255), 0, int(led_vector[2][i] * 255))
         pix += 1
     # pixels.clear()
     pixels.show()

@@ -26,6 +26,7 @@ pixels = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, spi=SPI.SpiDev(SPI_PORT, SPI_
 import SimProc
 import LEDBasics
 import SimpleLEDPattern
+import DimensionalLEDPattern
 
 if __name__ == "__main__":
     # Clear all the pixels to turn them off.
@@ -39,9 +40,11 @@ while True:
     for i in vehicles:
         i.status() 
     led_vector = SimpleLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
+    #led_vector, color_vector = DimensionalLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     print(led_vector)
     LEDBasics.show_LEDs(pixels, led_vector, ["red", "yellow"])
     #LEDBasics.show_LEDs(pixels, led_vector, ["yellow", "red"])
+    #LEDBasics.show_Dim_LEDs(pixels, led_vector, ["yellow_to_red", "yellow_to_red"], color_vector)
 
     
     

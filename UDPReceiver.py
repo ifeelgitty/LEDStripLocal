@@ -33,9 +33,6 @@ if __name__ == "__main__":
     pixels.show()  # Make sure to call show() after changing any pixels!
 
 
-
-
-
 while True:
     data, addr = sock.recvfrom(300) # buffer size is 1024 bytes
     vehicles = SimProc.preproc(data)
@@ -43,7 +40,9 @@ while True:
         i.status() 
     led_vector = SimpleLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     print(led_vector)
-    LEDBasics.show_LEDs(pixels, led_vector)
+    LEDBasics.show_LEDs(pixels, led_vector, ["red", "yellow"])
+    #LEDBasics.show_LEDs(pixels, led_vector, ["yellow", "red"])
+
     
     
 

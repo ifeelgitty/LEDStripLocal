@@ -22,6 +22,7 @@ LED_DEGREES = 180
 SPI_PORT   = 0
 SPI_DEVICE = 0
 pixels = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE), gpio=GPIO)
+take_over = False
 
 import SimProc
 import LEDBasics
@@ -42,11 +43,16 @@ while True:
     #led_vector = SimpleLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     led_vector, color_vector = DimensionalLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     print(led_vector)
-    #LEDBasics.show_LEDs(pixels, led_vector, ["red", "yellow"])
-    #LEDBasics.show_LEDs(pixels, led_vector, ["yellow", "red"])
-    LEDBasics.show_Dim_LEDs(pixels, led_vector, ["yellow_to_red", "yellow_to_red"], color_vector)
-
     
+    curr_time = int(round(time.time() * 10)) 
+    
+    if take_over == True and curr_time % 10 < 5:
+        pixels.clear()
+    else:
+        #LEDBasics.show_LEDs(pixels, led_vector, ["red", "yellow"])
+        #LEDBasics.show_LEDs(pixels, led_vector, ["yellow", "red"])
+        LEDBasics.show_Dim_LEDs(pixels, led_vector, ["yellow_to_red", "yellow_to_red"], color_vector)
+
     
 
     #print("received message:", data)

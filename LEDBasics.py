@@ -18,13 +18,16 @@ def show_LEDs(pixels, led_vector, colors):
     
     pix = 0
     for i in range(len(led_vector[0])):
-        pixels.set_pixel_rgb(pix, color_option[colors[1]](led_vector[0][i]))
+        pixel_rgb = color_option[colors[1]](led_vector[0][i])
+        pixels.set_pixel_rgb(pix, pixel_rgb[0], pixel_rgb[1], pixel_rgb[2])
         pix += 1
     for i in range(len(led_vector[1])):
-        pixels.set_pixel_rgb(pix, color_option[colors[0]](led_vector[1][i]))
+        pixel_rgb = color_option[colors[0]](led_vector[1][i])
+        pixels.set_pixel_rgb(pix, pixel_rgb[0], pixel_rgb[1], pixel_rgb[2])
         pix += 1
     for i in range(len(led_vector[2])):
-        pixels.set_pixel_rgb(pix, color_option[colors[1]](led_vector[2][i]))
+        pixel_rgb = color_option[colors[1]](led_vector[2][i])
+        pixels.set_pixel_rgb(pix, pixel_rgb[0], pixel_rgb[1], pixel_rgb[2])
         pix += 1
     # pixels.clear()
     pixels.show()
@@ -38,22 +41,25 @@ def show_Dim_LEDs(pixels, led_vector, colors, color_vec):
             factor_color = 1
         else:
             factor_color = (distances[0] - dist_color) / (distances[0] - distances[1])
-        return int(factor * 255), 0, int(factor_color * factor * 255)
+        return int(factor * 255), 0, int((1 - factor_color) * factor * 255)
     
     color_option = {}
     color_option["yellow_to_red"] = px_yellow_to_red
         
-    distances = [60, 5]
+    distances = [120, 10]
     
     pix = 0
     for i in range(len(led_vector[0])):
-        pixels.set_pixel_rgb(pix, color_option[colors[1]](led_vector[0][i]))
+        pixel_rgb = color_option[colors[1]](led_vector[0][i], color_vec[0][i])
+        pixels.set_pixel_rgb(pix, pixel_rgb[0], pixel_rgb[1], pixel_rgb[2])
         pix += 1
     for i in range(len(led_vector[1])):
-        pixels.set_pixel_rgb(pix, color_option[colors[0]](led_vector[1][i]))
+        pixel_rgb = color_option[colors[0]](led_vector[1][i], color_vec[1][i])
+        pixels.set_pixel_rgb(pix, pixel_rgb[0], pixel_rgb[1], pixel_rgb[2])
         pix += 1
     for i in range(len(led_vector[2])):
-        pixels.set_pixel_rgb(pix, color_option[colors[1]](led_vector[2][i]))
+        pixel_rgb = color_option[colors[1]](led_vector[2][i], color_vec[2][i])
+        pixels.set_pixel_rgb(pix, pixel_rgb[0], pixel_rgb[1], pixel_rgb[2])
         pix += 1
     # pixels.clear()
     pixels.show()

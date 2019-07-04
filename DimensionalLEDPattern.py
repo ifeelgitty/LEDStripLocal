@@ -133,14 +133,14 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
                     ledc = the central LED position
                     j = diversion from ledc
                     """
-                    pix_vec, color_vec_f = change_light(bright_list[j], pix_vec, color_vec_f, led_c, j)
+                    pix_vec, color_vec_f = change_light(bright_list[j], pix_vec, color_vec_f, led_c, j, i.e_d)
             else:
                 led_c = led_position_back(i, step_back, LED_DEGREES)
                 bright_list = []
                 for j in led_pref:
                     bright_list.append((j[0] - i.e_d) / (j[0] - j[1]))
                 for j in range(len(bright_list)):
-                    pix_vec_back, color_vec_b = change_light(bright_list[j], pix_vec_back, color_vec_b, led_c, j)
+                    pix_vec_back, color_vec_b = change_light(bright_list[j], pix_vec_back, color_vec_b, led_c, j, i.e_d)
     
     print(pix_vec_back)
     pix_vec_b_r = pix_vec_back[:b_pixels]

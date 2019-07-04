@@ -1,7 +1,7 @@
 # Stuff relating UDP connection
 import socket
 # Set IP of the Raspberry Pi
-UDP_IP = "145.90.179.96"
+UDP_IP = "145.90.179.180"
 # Set Port used bz Simulator to send data
 UDP_PORT = 30002
 sock = socket.socket(socket.AF_INET, # Internet
@@ -39,12 +39,12 @@ while True:
     vehicles = SimProc.preproc(data)
     for i in vehicles:
         i.status() 
-    led_vector = SimpleLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
-    #led_vector, color_vector = DimensionalLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
+    #led_vector = SimpleLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
+    led_vector, color_vector = DimensionalLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     print(led_vector)
-    LEDBasics.show_LEDs(pixels, led_vector, ["red", "yellow"])
+    #LEDBasics.show_LEDs(pixels, led_vector, ["red", "yellow"])
     #LEDBasics.show_LEDs(pixels, led_vector, ["yellow", "red"])
-    #LEDBasics.show_Dim_LEDs(pixels, led_vector, ["yellow_to_red", "yellow_to_red"], color_vector)
+    LEDBasics.show_Dim_LEDs(pixels, led_vector, ["yellow_to_red", "yellow_to_red"], color_vector)
 
     
     

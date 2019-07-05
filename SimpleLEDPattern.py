@@ -53,7 +53,10 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
             return f_pixels
         elif add_val >= 1:
             if led_ord == 0:
-                f_pixels[led_pos] = 1
+                try:
+                    f_pixels[led_pos] = 1
+                except IndexError:
+                    pass
                 return f_pixels
             else:
                 try:
@@ -67,7 +70,10 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
                 return f_pixels
         else:
             if led_ord == 0:
-                f_pixels[led_pos] += add_val
+                try:
+                    f_pixels[led_pos] += add_val
+                except IndexError:
+                    pass
                 return f_pixels
             else:
                 try:
@@ -104,7 +110,7 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
     
     vehicles.pop(0)
     for i in vehicles:
-        if i.e_d <= threshold:
+        if i.e_d <= threshold and i.e_d > 0:
             led_c = led_position_front(i, step, f_pixels)
             if led_c != None:
                 bright_list = []

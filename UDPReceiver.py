@@ -37,21 +37,23 @@ if __name__ == "__main__":
 
 while True:
     data, addr = sock.recvfrom(300) # buffer size is 1024 bytes
-    vehicles = SimProc.preproc(data)
+    vehicles, take_over = SimProc.preproc(data)
     for i in vehicles:
         i.status() 
-    #led_vector = SimpleLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
-    led_vector, color_vector = DimensionalLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
+    led_vector = SimpleLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
+    #led_vector, color_vector = DimensionalLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     print(led_vector)
     
-    curr_time = int(round(time.time() * 10)) 
+    curr_time = int(round(time.time() * 10))
     
-    if take_over == True and curr_time % 10 < 5:
+    if take_over == True and ( curr_time % 10 < 2 or 4 <= curr_time % 10 < 6 or curr_time % 10 >= 8 )  :
+        print("Its off")
         pixels.clear()
+        pixels.show()
     else:
-        #LEDBasics.show_LEDs(pixels, led_vector, ["red", "yellow"])
+        LEDBasics.show_LEDs(pixels, led_vector, ["red", "yellow"])
         #LEDBasics.show_LEDs(pixels, led_vector, ["yellow", "red"])
-        LEDBasics.show_Dim_LEDs(pixels, led_vector, ["yellow_to_red", "yellow_to_red"], color_vector)
+        #LEDBasics.show_Dim_LEDs(pixels, led_vector, ["yellow_to_red", "yellow_to_red"], color_vector)
 
     
 

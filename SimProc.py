@@ -50,10 +50,20 @@ class Vehicle:
 
 
 def preproc(dat):
-    #Formatting String into the single Vehicle variables    
-    def format_string(s):
+    def takeoverrequest(s):
         # Removing Whitespaces
         s = s.replace(' ', '')
+        print(s)
+        if s[2] == "T":
+            available = True
+        elif s[2] == "F":
+            available = False
+        else:
+            available = False
+        return s, available
+    
+    #Formatting String into the single Vehicle variables
+    def format_string(s):
         # separate into list
         l = s.split('/')
         # Create list to hold items
@@ -109,8 +119,9 @@ def preproc(dat):
                 vehicles[i].e_a = 360 + vehicles[i].e_a
         return vehicles
     
-    vehicles = format_string(str(dat))
+    dat, take_over = takeoverrequest(str(dat))
+    vehicles = format_string(dat)
     vehicles = transposing_vehicles(vehicles)
     vehicles = dist_to_ego(vehicles)
     vehicles = angle_to_ego(vehicles)
-    return vehicles
+    return vehicles, take_over

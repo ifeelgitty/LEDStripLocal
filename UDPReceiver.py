@@ -27,6 +27,7 @@ take_over = False
 import SimProc
 import LEDBasics
 import SimpleLEDPattern
+import RenewedSimpleLEDPattern
 import DimensionalLEDPattern
 
 if __name__ == "__main__":

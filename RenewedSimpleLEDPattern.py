@@ -13,17 +13,7 @@ step = the angle-"distances" between each pixel
 f_pixels = Why is that in there? :D
 returns the central pixel as int
 """
-def led_position_front(veh, step, LED_DEGREES):
-    # Position if car on the right side
-    if veh.e_a <= LED_DEGREES/2:
-        return int((LED_DEGREES/2 - veh.e_a) / step)
-    # Position if car on left side
-    elif veh.e_a >= 360 - LED_DEGREES/2:
-        return int((-(veh.e_a - 360) + LED_DEGREES/2) / step)
-        #return round((veh.e_a - LED_DEGREES)/ step)
-        #return round(((360 - veh.e_a) + LED_DEGREES/2) / step)
-    else:
-        return None
+
     
 def led_position_back(veh, step_back, LED_DEGREES):
     return int((veh.e_a - LED_DEGREES/2) / step_back)
@@ -40,6 +30,19 @@ how strongly they are lighting up.
 
 
 def main(vehicles, PIXEL_COUNT, LED_DEGREES):
+    
+    def led_position_front(veh, step, LED_DEGREES):
+        if angle_to_bar_r <= veh.e_a <= LED_DEGREES/2:
+            return int((LED_DEGREES/2 - veh.e_a) / step_rr)
+        elif 0 <= veh.e_a < angle_to_bar_r:
+            return 69 + int((angle_to_bar_r - veh.e_a) / step_r)
+        elif (360 - angle_to_bar_l) <= veh.e_a <= 360:
+            return 103 + int(-(veh.e_a - 360) / step_l)
+        elif (360 - LED_DEGREES/2) <= veh.e_a:
+            return 121 + int((-(veh.e_a - 360)-angle_to_bar_l) / step_ll)
+        else:
+            return None
+        
     """
     Change Light unsurprisingly changes a light, well, a pixel.
     add_val: value to be added to pixel
@@ -95,8 +98,14 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
     pix_vec_back = [0] * (2 * b_pixels)
     # The distance, from which on a car is represented on the screen
     threshold = 200
+    angle_to_bar_r = 55
+    angle_to_bar_l = 35
     # 
     step = LED_DEGREES / f_pixels
+    step_rr = (LED_DEGREES/2 - angle_to_bar_r) / 69
+    step_r = angle_to_bar_r / 34
+    step_l = angle_to_bar_l / 18
+    step_ll = (LED_DEGREES/2 - angle_to_bar_l) / 71
     step_back = (360 - LED_DEGREES) / (2 * b_pixels)
     led_pref = [
                 [200, 60],
@@ -111,7 +120,7 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
     vehicles.pop(0)
     for i in vehicles:
         if i.e_d <= threshold and i.e_d > 0:
-            led_c = led_position_front(i, step, f_pixels)
+            led_c = led_position_front(i, step, f_pixels, step_rr, step_r, step_l, step_ll)
             if led_c != None:
                 bright_list = []
                 for j in led_pref:

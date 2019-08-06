@@ -41,7 +41,7 @@ while True:
     vehicles, take_over = SimProc.preproc(data)
     for i in vehicles:
         i.status() 
-    led_vector = SimpleLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
+    led_vector = RenewedSimpleLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     #led_vector, color_vector = DimensionalLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     print(led_vector)
     

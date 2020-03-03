@@ -1,7 +1,7 @@
 # Stuff relating UDP connection
 import socket
 # Set IP of the Raspberry Pi
-UDP_IP = "145.90.179.180"
+UDP_IP = "192.168.1.101"
 # Set Port used bz Simulator to send data
 UDP_PORT = 30002
 sock = socket.socket(socket.AF_INET, # Internet

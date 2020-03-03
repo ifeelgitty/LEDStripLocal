@@ -31,7 +31,7 @@ how strongly they are lighting up.
 
 def main(vehicles, PIXEL_COUNT, LED_DEGREES):
     
-    def led_position_front(veh, step, LED_DEGREES):
+    def led_position_front(veh, step, LED_DEGREES, step_rr, step_r, step_l, step_ll):
         if angle_to_bar_r <= veh.e_a <= LED_DEGREES/2:
             return int((LED_DEGREES/2 - veh.e_a) / step_rr)
         elif 0 <= veh.e_a < angle_to_bar_r:
@@ -90,7 +90,7 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
                 return f_pixels
     
     # Noof pixels representing back of car on every side
-    b_pixels = 0
+    b_pixels = 10
     # Noof front pixels can be calculated from all of the parameters
     f_pixels = PIXEL_COUNT - b_pixels * 2
     # Pixel vector for the front pixels

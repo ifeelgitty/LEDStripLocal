@@ -30,6 +30,7 @@ import SimProc
 import LEDBasics
 import SimpleLEDPattern_noback
 import SimpleLEDPattern_back
+import SimpleLEDPattern_noback_dim
 
 if __name__ == "__main__":
     # Clear all the pixels to turn them off.
@@ -44,6 +45,7 @@ while True:
         i.status() 
     led_vector = SimpleLEDPattern_noback.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     #led_vector = SimpleLEDPattern_back.main(vehicles, PIXEL_COUNT, LED_DEGREES)
+    #led_vector, color_vector = SimpleLEDPattern_noback_dim.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     print(led_vector)
     
     curr_time = int(round(time.time() * 10))

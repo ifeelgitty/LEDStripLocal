@@ -18,6 +18,8 @@ import Adafruit_GPIO.SPI as SPI
 PIXEL_COUNT = 192
 # The radius which  
 LED_DEGREES = 230
+#LED_DEGREES = 200
+
 # Alternatively specify a hardware SPI connection on /dev/spidev0.0:
 SPI_PORT   = 0
 SPI_DEVICE = 0
@@ -26,10 +28,9 @@ take_over = False
 
 import SimProc
 import LEDBasics
-import SimpleLEDPattern
-import RenewedSimpleLEDPattern
-import DimensionalLEDPattern
 import SimpleLEDPattern_noback
+import SimpleLEDPattern_back
+import SimpleLEDPattern_noback_dim
 
 if __name__ == "__main__":
     # Clear all the pixels to turn them off.
@@ -43,7 +44,8 @@ while True:
     for i in vehicles:
         i.status() 
     led_vector = SimpleLEDPattern_noback.main(vehicles, PIXEL_COUNT, LED_DEGREES)
-    #led_vector, color_vector = DimensionalLEDPattern.main(vehicles, PIXEL_COUNT, LED_DEGREES)
+    #led_vector = SimpleLEDPattern_back.main(vehicles, PIXEL_COUNT, LED_DEGREES)
+    #led_vector, color_vector = SimpleLEDPattern_noback_dim.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     print(led_vector)
     
     curr_time = int(round(time.time() * 10))
@@ -53,7 +55,7 @@ while True:
         pixels.clear()
         pixels.show()
     else:
-        LEDBasics.show_LEDs(pixels, led_vector, ["red", "yellow"])
+        LEDBasics.show_LEDs(pixels, led_vector, ["yellow", "yellow"])
         #LEDBasics.show_LEDs(pixels, led_vector, ["yellow", "red"])
         #LEDBasics.show_Dim_LEDs(pixels, led_vector, ["yellow_to_red", "yellow_to_red"], color_vector)
 

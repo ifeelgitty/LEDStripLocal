@@ -7,8 +7,12 @@ Created on Fri Jun 21 21:18:46 2019
 
 def show_LEDs(pixels, led_vector, colors):
     def px_red(factor):
+        if factor >= 1:
+            factor = 1
         return int(factor * 255), 0, 0
     def px_yellow(factor):
+        if factor >= 1:
+            factor = 1
         return int(factor * 255), 0, int(factor * 255)
 
     
@@ -35,6 +39,8 @@ def show_LEDs(pixels, led_vector, colors):
 def show_Dim_LEDs(pixels, led_vector, colors, color_vec):
     
     def px_yellow_to_red(factor, dist_color):
+        if factor >= 1:
+            factor = 1
         if dist_color > distances[0]:
             factor_color = 0
         elif dist_color < distances[1]:

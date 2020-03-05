@@ -81,7 +81,7 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
                     c_pixels = change_c_pix(c_pixels, led_pos)
                 except IndexError:
                     pass
-                return f_pixels
+                return f_pixels, c_pixels
             else:
                 try:
                     f_pixels[led_pos + led_ord] += 1

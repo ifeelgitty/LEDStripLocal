@@ -46,7 +46,7 @@ while True:
     led_vector = SimpleLEDPattern_noback.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     #led_vector = SimpleLEDPattern_back.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     #led_vector, color_vector = SimpleLEDPattern_noback_dim.main(vehicles, PIXEL_COUNT, LED_DEGREES)
-    print(led_vector)
+    #print(led_vector)
     
     curr_time = int(round(time.time() * 10))
     

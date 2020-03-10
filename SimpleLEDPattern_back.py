@@ -33,17 +33,17 @@ how strongly they are lighting up.
 def main(vehicles, PIXEL_COUNT, LED_DEGREES):
 
     
-    def led_position_front(veh, step, LED_DEGREES, step_rr, step_r, step_l, step_ll):
+    def led_position_front(veh, step, LED_DEGREES, b_pixels, step_rr, step_r, step_l, step_ll):
         if angle_to_bar_r <= veh.e_a <= LED_DEGREES/2:
             relative_ea = veh.e_a
             relative_led_degr = (LED_DEGREES/2)
             return int(((relative_led_degr) - relative_ea) / step_rr)
         elif 0 <= veh.e_a < angle_to_bar_r:
-            return 69 + int((angle_to_bar_r - veh.e_a) / step_r)
+            return 69 - b_pixels + int((angle_to_bar_r - veh.e_a) / step_r) 
         elif (360 - angle_to_bar_l) <= veh.e_a <= 360:
-            return 103 + int(-(veh.e_a - 360) / step_l)
+            return 103 - b_pixels + int(-(veh.e_a - 360) / step_l)
         elif (360 - LED_DEGREES/2) <= veh.e_a:
-            return 121 + int((-(veh.e_a - 360)-angle_to_bar_l) / step_ll)
+            return 121 - b_pixels + int((-(veh.e_a - 360)-angle_to_bar_l) / step_ll)
         else:
             return None
         
@@ -94,7 +94,7 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
                 return f_pixels
     
     # Noof pixels representing back of car on every side
-    b_pixels = 20
+    b_pixels = 30
     # Noof front pixels can be calculated from all of the parameters
     f_pixels = PIXEL_COUNT - b_pixels * 2
     # Pixel vector for the front pixels
@@ -106,10 +106,10 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
     angle_to_bar_l = 35
     # 
     step = LED_DEGREES / f_pixels
-    step_rr = (LED_DEGREES/2 - angle_to_bar_r) / 69
+    step_rr = (LED_DEGREES/2 - angle_to_bar_r) / (69 - b_pixels)
     step_r = angle_to_bar_r / 34
     step_l = angle_to_bar_l / 18
-    step_ll = (LED_DEGREES/2 - angle_to_bar_l) / 71
+    step_ll = (LED_DEGREES/2 - angle_to_bar_l) / (71 - b_pixels)
     step_back = (360 - LED_DEGREES) / (2 * b_pixels)
     led_pref = [
                 [200, 60],
@@ -120,11 +120,27 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
                 [18, 0]
                 ]
     
+    led_pref_back = [
+                [200, 70],
+                [180, 60],
+                [160, 55],
+                [140, 45],
+                [120, 40],
+                [100, 35],
+                [90, 30],
+                [80, 25],
+                [70, 22],
+                [60, 20],
+                [45, 15],
+                [30, 10],
+                [18, 0]
+                ]
+    
     
     vehicles.pop(0) # Delete ego car from list of surrounding vehicles :)
     for i in vehicles:
         if i.e_d <= threshold and i.e_d > 0:
-            led_c = led_position_front(i, step, LED_DEGREES, step_rr, step_r, step_l, step_ll)
+            led_c = led_position_front(i, step, LED_DEGREES, b_pixels, step_rr, step_r, step_l, step_ll)
             if led_c != None:
                 bright_list = []
                 for j in led_pref:
@@ -141,7 +157,7 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
             else:
                 led_c = led_position_back(i, step_back, LED_DEGREES)
                 bright_list = []
-                for j in led_pref:
+                for j in led_pref_back:
                     bright_list.append((j[0] - i.e_d) / (j[0] - j[1]))
                 for j in range(len(bright_list)):
                     pix_vec_back = change_light(bright_list[j], pix_vec_back, led_c, j)

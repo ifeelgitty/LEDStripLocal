@@ -18,7 +18,7 @@ import Adafruit_GPIO.SPI as SPI
 PIXEL_COUNT = 192
 # The radius which  
 #LED_DEGREES = 230
-LED_DEGREES = 200
+LED_DEGREES = 190
 
 # Alternatively specify a hardware SPI connection on /dev/spidev0.0:
 SPI_PORT   = 0

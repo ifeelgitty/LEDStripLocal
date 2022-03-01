@@ -11,7 +11,6 @@ import logging
 Computing the central LED that has to light up representing the respective car.
 veh = Vehicle from the Vehicle-class
 step = the angle-"distances" between each pixel
-f_pixels = Why is that in there? :D
 returns the central pixel as int
 """
 
@@ -102,15 +101,18 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
     pix_vec_back = [0] * (2 * b_pixels)
     # The distance, from which on a car is represented on the screen
     threshold = 200
+    # These represent the angles until the respective "end" of the middle screen of the simulator towards the right and left, which I've called "bar"
     angle_to_bar_r = 55
     angle_to_bar_l = 35
-    # 
+    # Steps refer to the angle steps from one LED to the next, which depending on the specific position changes, as the LED strips distance changes, so it's not a circle around the driver. figuring all of these values out is ANNOYING and takes a while, I basically had to do it by trial and error and am not claiming that it is perfectly right.
     step = LED_DEGREES / f_pixels
     step_rr = (LED_DEGREES/2 - angle_to_bar_r) / (69 - b_pixels)
     step_r = angle_to_bar_r / 34
     step_l = angle_to_bar_l / 18
     step_ll = (LED_DEGREES/2 - angle_to_bar_l) / (71 - b_pixels)
     step_back = (360 - LED_DEGREES) / (2 * b_pixels)
+    
+    # This refers to the distances at which the respective LEDs relative to the most central LED representing a car bright up and at which distance they are at their full brightness. Check the paper for a conceptual explanation! Basically: The central LED starts at 200 meters distance and is at full brightness at 60 meters distance, the ones to the right and left start at 150 and are full at 45, etc.
     led_pref = [
                 [200, 60],
                 [150, 45],
@@ -138,6 +140,8 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
     
     
     vehicles.pop(0) # Delete ego car from list of surrounding vehicles :)
+    
+    # Looping over all vehicles
     for i in vehicles:
         if i.e_d <= threshold and i.e_d > 0:
             led_c = led_position_front(i, step, LED_DEGREES, b_pixels, step_rr, step_r, step_l, step_ll)
@@ -162,6 +166,7 @@ def main(vehicles, PIXEL_COUNT, LED_DEGREES):
                 for j in range(len(bright_list)):
                     pix_vec_back = change_light(bright_list[j], pix_vec_back, led_c, j)
 
+    # Reshuffling the order to get three lists of pixels, representing the left-back, right-back and central(front), as this is necessary for the right order in the "showing" on the LED strip.
     pix_vec_b_r = pix_vec_back[:b_pixels]
     pix_vec_b_r.reverse()
     pix_vec_b_l = pix_vec_back[b_pixels:]

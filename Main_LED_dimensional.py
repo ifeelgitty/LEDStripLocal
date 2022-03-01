@@ -16,7 +16,7 @@ import Adafruit_WS2801
 import Adafruit_GPIO.SPI as SPI
 # Configure the count of pixels(32 per meter):
 PIXEL_COUNT = 192
-# The radius which  
+# The radius which
 LED_DEGREES = 230
 #LED_DEGREES = 200
 

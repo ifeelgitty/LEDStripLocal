@@ -16,14 +16,16 @@ import Adafruit_WS2801
 import Adafruit_GPIO.SPI as SPI
 # Configure the count of pixels(32 per meter):
 PIXEL_COUNT = 192
-# The radius which  
+# The radius which the LED strip approximately covers
 #LED_DEGREES = 230
 LED_DEGREES = 190
 
 # Alternatively specify a hardware SPI connection on /dev/spidev0.0:
 SPI_PORT   = 0
 SPI_DEVICE = 0
+# pixels accesses the strip itself programmatically
 pixels = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE), gpio=GPIO)
+# Take over refers to a different scenario, where the car first drives itself.
 take_over = False
 
 import SimProc
@@ -37,19 +39,22 @@ if __name__ == "__main__":
     pixels.clear()
     pixels.show()  # Make sure to call show() after changing any pixels!
 
-
+# Loop running all functions relating the LED strip processing
 while True:
+    # Gets data from driving sim over UDP
     data, addr = sock.recvfrom(300) # buffer size is 1024 bytes
+    # Processing data of all vehicles
     vehicles, take_over = SimProc.preproc(data)
     for i in vehicles:
-        i.status() 
-    #led_vector = SimpleLEDPattern_noback.main(vehicles, PIXEL_COUNT, LED_DEGREES)
+        i.status()
+        
+    # Converts the state of vehicles into respective LED patterns
     led_vector = SimpleLEDPattern_back.main(vehicles, PIXEL_COUNT, LED_DEGREES)
-    #led_vector, color_vector = SimpleLEDPattern_noback_dim.main(vehicles, PIXEL_COUNT, LED_DEGREES)
     print(led_vector)
     
     curr_time = int(round(time.time() * 10))
     
+    # Showing the LEDs in their respective colors!
     if take_over == True and ( curr_time % 10 < 2 or 4 <= curr_time % 10 < 6 or curr_time % 10 >= 8 )  :
         print("Its off")
         pixels.clear()
